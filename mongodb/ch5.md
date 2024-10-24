@@ -116,3 +116,52 @@ Lorsqu'on spécifie un document avec une clé valeur alors une restriction s'op�
 db.maCollection.find({"age":14})
 // retourne tous les documents dont l'age est égal à 14
 ```
+* AND
+```
+db.maCollection.find({"username":"koffi","age":14})
+```
+
+* Projection
+```
+db.movies.find({},{"title":1,"year":1})
+```
+* Conditionnals
+```
+db.movies.find({"year" : {"$gte" : 2000, "$lte" : 1999}})
+```
+* $in
+```
+db.raffle.find({"ticket_no" : {"$in" : [725, 542, 390]}})
+```
+
+* $nin
+```
+db.raffle.find({"ticket_no" : {"$nin" : [725, 542, 390]}})
+```
+* $or
+```
+db.raffle.find({"$or" : [{"ticket_no" : 725}, {"winner" : true}]})
+```
+* Faire une requête sur les documents dont les champs sont inexistants
+```
+db.movies.find({"year":null})
+```
+#### Requête sur les tableaux
+
+```
+//recherche les movies qui ont le genre romance
+db.movies.find({"genres":"romance"})
+```
+* $all
+```
+// recupère les films de la categorie sciences-fiction et drame
+db.movies.find({"genres":{$all:['sciences-fiction','drame']}})
+```
+
+{"genres":{$all:['drame']}} est équivalent à {"genres":"drame"}
+```
+db.movies.find({"genres":{$all:['drame']}})
+```
+
+
+#### Requête sur les objets imbriqués
