@@ -167,6 +167,7 @@ db.movies.find({"genres":{$all:['drame']}})
 #### Requête sur les objets imbriqués
 ```
 db.people.find({"name" : {"first" : "Joe", "last" : "Schmoe"}})
+db.employe_info.find({"adresse" : {"NomRue" : "Guillaume", "CodePostal" : "59000"}})
 // recupère les documents, dont les documents imbriquées correspondent au document passé en paramètre
 ```
 si un nouveau champ est rajouté dans le sous-document, aucun document ne correspondra, car cette méthode fait une comparaison exacte et aussi tiens compte de l'ordre : {"last" : "Schmoe","first" : "Joe"}.
@@ -209,3 +210,18 @@ Pour avoir un résultat correct, il nous faut un $elemMatch
 db.blog.find({"comments" : {"$elemMatch" : {"author" : "mary", "score" : {"$gte" : 6}}}})
 ```
 
+* countDocuments
+
+Permet de compter les documents contenus dans une collection. Cette méthode prend aussi
+un paramètre et des options
+```
+db.collection.countDocuments( <query>, <options> )
+```
+source : https://www.mongodb.com/docs/manual/reference/method/db.collection.countDocuments/
+
+* distinct
+Permet de récuperer des valeurs distinctes
+```
+ db.collection.distinct(field, query, options)
+```
+source : https://www.mongodb.com/docs/manual/reference/method/db.collection.distinct/
