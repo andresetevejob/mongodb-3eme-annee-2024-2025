@@ -109,7 +109,7 @@ PS: Un filtre est aussi un document
  db.maCollection.find() ou db.maCollection.find({})
 // Tous les documents de la collection maCollection seront retournées 
 ```
-{} = répresente une collection vide
+{} = répresente un document vide
 
 Lorsqu'on spécifie un document avec une clé valeur alors une restriction s'opère sur la recherche de document
 ```
@@ -165,3 +165,47 @@ db.movies.find({"genres":{$all:['drame']}})
 
 
 #### Requête sur les objets imbriqués
+```
+db.people.find({"name" : {"first" : "Joe", "last" : "Schmoe"}})
+// recupère les documents, dont les documents imbriquées correspondent au document passé en paramètre
+```
+si un nouveau champ est rajouté dans le sous-document, aucun document ne correspondra, car cette méthode fait une comparaison exacte et aussi tiens compte de l'ordre : {"last" : "Schmoe","first" : "Joe"}.
+
+Pour pallier à cela il faut utilisé la notation pointé
+```
+db.people.find({"name.first" : "Joe", "name.last" : "Schmoe"})
+```
+* $elemMatch :
+
+soit la collection suivante 
+```
+[
+  {
+    _id: ObjectId('6719e5b8704e97c353fbd150'),
+    content: "Les flammes de l'amour",
+    comments: [
+      { author: 'joe', score: 8, comment: 'nice' },
+      { author: 'mary', score: 6, comment: 'terrible post' }
+    ]
+  },
+  {
+    _id: ObjectId('6719e5da704e97c353fbd151'),
+    content: 'Les joies du code',
+    comments: [
+      { author: 'joe', score: 3, comment: 'nice' },
+      { author: 'mary', score: 7, comment: 'terrible post' }
+    ]
+  }
+]
+```
+On souhaite afficher tous les posts au mary a fait un commentaire avec une note >=6
+```
+db.blog.find({"comments.author" : "mary", "comments.score" : {"$gte" : 6}})
+```
+La requête ci-dessus va nous tous les posts dans lesquels on a la fois un commentaire supérieur à ou égal à 6 ou dont l'auteur est Mary
+
+Pour avoir un résultat correct, il nous faut un $elemMatch
+```
+db.blog.find({"comments" : {"$elemMatch" : {"author" : "mary", "score" : {"$gte" : 6}}}})
+```
+
