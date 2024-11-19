@@ -98,6 +98,42 @@ par mongodb lors de la modification
  ```
   https://www.mongodb.com/docs/manual/reference/operator/update-field/
  ```
+* updateMany
+
+* $push
+
+* Renommer un champ de document
+L'opérateur rename, permet de modifier le nom d’un champ existant dans un
+document. Le premier est le champ cible et le second le nouveau nom du champ
+```
+db.personnes.updateMany({}, {$rename: { "prenom": "prenoms"}}) //Modification d’un seul champ
+db.personnes.updateMany({}, {$rename: { "prenoms": "prenom", "age": "ages"}}) // Modification
+de plusieurs champs
+```
+Attention toutefois lorsque vous effectuez un renommage sur un champ: s’il existe
+un champ portant le nouveau nom, les valeurs contenues dans celui-ci seront
+purement et simplement écrasées par celles qui proviennent du nouveau champ !
+```
+//si nous renommons le champ prenoms par nom
+db.personnes.updateMany({}, {$rename: { "prenoms": "nom"}})
+// les valeurs contenues dans prenoms écraseront celle de nom
+```
+IL est possible de renommer un champ contenu dans un sous document
+```
+db.personnes.insert(
+{"prenom": "dupont", "adresse": {"ville": "Apt", "cp": "84400"}}
+)
+db.personnes.updateMany({}, {$rename: { "adresse.cp":
+"adresse.code_postal"}})
+```
+Si vous ne pointez correctement le sous document sur le nom du nouveau champ,
+le champ sera déplacé au niveau supérieur
+```
+db.personnes.updateMany({}, {$rename: { "adresse.cp": "code_postal"}})
+// le champ code_postal sera déplacé dans le document personne plutôt qu’il reste dans le
+//document adresse.
+```
+
 
 ## Lecture de document
 
@@ -225,3 +261,97 @@ Permet de récuperer des valeurs distinctes
  db.collection.distinct(field, query, options)
 ```
 source : https://www.mongodb.com/docs/manual/reference/method/db.collection.distinct/
+
+* findAndModify
+
+Modifie et retourne un seul document.Par défaut ne retourne pas le document incluant les
+modifications effectuées par le update.Pour retourner celui incluant les modifications
+effectuées, il faut rajouter l’option new.
+
+```
+db.collection.findAndModify({
+query: < document >,
+sort: < document >,
+remove: < booléen >,
+update: < document >,
+new: < booléen >,
+fields: < document >,
+upsert: < booléen >
+});
+```
+
+La commande ci dessous modifie les prénoms commençants par r
+```
+db.personnes.findAndModify({
+"query": { "prenom": /^r/i },
+"sort": { "prenom": -1 },
+"update": { $inc: { "nbmodifs": 1 } },
+"new": true
+})
+```
+IL possible de supprimer un document avec le findAndModify,en rajoutant l’option
+remove valorisé à true.Ce dernier n’est pas compatible avec l’option new
+```
+db.personnes.findAndModify({
+"query": { "prenom": /^r/i },
+"sort": { "prenom": -1 },
+"remove": true
+})
+```
+Nous pouvons retourner un sous ensemble des informations du document avec
+un findAndModify, au moyen du champ fields.Dans l’exemple ci-dessous, le
+document retourné incluera le champ nbmodifs et exclura le champ _id
+```
+db.personnes.findAndModify({
+"query": { "prenom": /^r/i },
+"sort": { "prenom": -1 },
+"update": { $inc: { "nbmodifs": 1 } },
+"fields": {"_id": 0, "nbmodifs": 1},
+"new": true
+})
+```
+Enfin la méthode findAndModify, met également à notre disposition, un champ
+pour réaliser des upserts.si le filtre ne cible aucun document, un nouveau en sera
+créée
+```
+db.personnes.findAndModify({
+"query": { "prenom": /^r/i },
+"sort": { "prenom": -1 },
+"update": { $inc: { "nbmodifs": 1 } },
+"fields": {"_id": 0, "nbmodifs": 1},
+"new": true,
+"upsert":true
+})
+```
+
+## Suppression de document
+```
+db.personnes.drop()
+db.personnes.deleteMany({})
+db.personnes.remove({})
+db.personnes.deleteOne(
+{"prenom": "Sébastien"}
+)
+db.personnes.remove({"prenom": "Sébastien"}, true) //supprime un seul document
+```
+
+## Remplacer un document
+IL est possible de modifier un document au sein d’une collection grâce à la méthode
+replaceOne
+```
+db.collection.replaceOne(filtre, document)
+```
+Lorsque nous faisons un replace, il faut spécifier les champs propriétés du document à
+remplacer sinon, nous les perdrons.
+```
+db.personnes.replaceOne(
+{"prenom": "robert"},
+{"prenom": "Jean-Sébastien"}
+)
+// Toutes les propriétés contenues dans le document ayant pour prenom robert seront perdues
+// pour les conserver, il faudrait les spécifier dans le replace
+db.personnes.replaceOne(
+{"prenom": "robert"},
+{"prenom": "Jean-Sébastien",”nom”:”plyia”}
+)
+```
