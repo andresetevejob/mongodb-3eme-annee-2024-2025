@@ -6,7 +6,7 @@
 - Protocol d'échange d'informations
 - Basé sur TCP/IP
 
-IL s'agit d'un protocol sur échane unique initié par le client.IL est synchrone.
+IL s'agit d'un protocol sur échange unique initié par le client.IL est synchrone.
 
 ![alt text for screen readers](/images/http-schema.png)
 
@@ -18,7 +18,7 @@ structure des requêtes et réponse
 {SEP}{SEP}
 {Corps}
 ```
-La ligne d'introduction est le seulement qui permet de différentier la requête de la réponse
+La ligne d'introduction est le seul element qui permet de différentier la requête de la réponse
 
 
 ##  3 - Requête HTTP
@@ -30,26 +30,28 @@ La ligne d'introduction est le seulement qui permet de différentier la requête
 ```
 SP => Correspond au séparateur
 
-#### 3.1.a - Méthode
+#### 3.1.a - Méthode (source https://developer.mozilla.org/fr/docs/Web/HTTP/Methods)
 - GET : La méthode la plus courante. Elle utiliser pour télécharger une ressource.Deux requêtes GET portant sur le même document doivent retourner doivent 
 
-- HEAD :
+- HEAD :  La méthode HEAD demande une réponse identique à une requête GET pour laquelle on aura omis le corps de la réponse (on a uniquement l'en-tête).
 
-- POST :
+- POST : La méthode POST est utilisée pour envoyer une entité vers la ressource indiquée. Cela entraîne généralement un changement d'état ou des effets de bord sur le serveur.
 
-- PUT :
+- PUT : La méthode PUT remplace toutes les représentations actuelles de la ressource visée par le contenu de la requête.
 
-- DELETE :
+- DELETE : La méthode DELETE supprime la ressource indiquée.
 
-- OPTIONS :
+- OPTIONS : La méthode OPTIONS est utilisée pour décrire les options de communications avec la ressource visée.
 
-- TRACE :
+- TRACE : La méthode TRACE réalise un message de test aller/retour en suivant le chemin de la ressource visée.
 
-- CONNECT :
+- CONNECT : La méthode CONNECT établit un tunnel vers le serveur identifié par la ressource cible.
+
+
 
 
 ### 3.2 - La Page
-désigne le chemin d'accès de la ressource qu'on veut consommer
+désigne le chemin d'accès de la ressource qu'on veut consommer.
 Deux éléments peuvent être ajoutés à ce chemin
 
 - Les paramètres d'URL (paramètres GET)

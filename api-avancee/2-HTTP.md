@@ -78,7 +78,7 @@ Le serveur ne supporte pas la version du protocole HTTP qui a été utilisée.
 ### 7.3 Les entêtes de réponse
 
 * Content-type et Content-length : 
-Ces deux en-têtes sont censés indiquer le type MIME et la taille en octets du corps de la réponse. De plus, l'en-tête Content-type peut indiquer le charset utilisé dans le corps de la réponse (dans le cadre d'un type texte). Il est alors indiqué par la mention "charset=" suivie du nom du charset. Il suit le type MIME, en est séparé par un point-virgule. S'ils ne sont pas indiqués, c'est le client qui est seul responsable de leur éventuelle valeur par défaut.
+Ces deux en-têtes sont censées indiquer le type MIME et la taille en octets du corps de la réponse. De plus, l'en-tête Content-type peut indiquer le charset utilisé dans le corps de la réponse (dans le cadre d'un type texte). Il est alors indiqué par la mention "charset=" suivie du nom du charset. Il suit le type MIME, en est séparé par un point-virgule. S'ils ne sont pas indiqués, c'est le client qui est seul responsable de leur éventuelle valeur par défaut.
 
 * Location : 
 Cet en-tête permet d'indiquer une redirection. À sa réception, le client est généralement censé renvoyer une requête sur l'adresse indiquée. Ce comportement dépend du code status renvoyé avec la réponse.
@@ -88,5 +88,15 @@ Cet en-tête permet d'indiquer au client des cookies à stocker. Sa valeur peut 
 
 ### 7.4 Exemple de réponse
 ```
-
+accept-ranges:
+bytes
+access-control-allow-origin:*
+age:61264
+alt-svc:clear
+cache-control:public,max-age=86400
+content-length:15948
+content-security-policy:default-src 'none'; img-src 'self'; script-src 'unsafe-inline'; style-src 'self'
+content-type:application/json
+date:Mon, 18 Nov 2024 11:08:40 GMT
+etag:"4b89f7a0eccb74208727093906ac1f92"
 ```
